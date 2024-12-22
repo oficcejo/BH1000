@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佰宏®BH-1000X（工业冷却水）除垢灵用量计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .calculator {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 200px;
+            padding: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .notice {
+            color: red;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+            margin-top: 30px;
+            padding-top: 20px;
+        }
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>佰宏<sup>®</sup>BH-1000X（工业冷却水）除垢灵用量计算器</h1>
+    
+    <div class="notice">
+        注意：本产品仅用于工业冷却水系统！
+    </div>
+
+    <div class="calculator">
+        <h2>一、初始清洗用量计算（第一个月）</h2>
+        <div class="input-group">
+            <label for="waterVolume">系统保有水量 (吨)：</label>
+            <input type="number" id="waterVolume" step="1" min="100" placeholder="请输入不小于100吨的水量">
+        </div>
+        <button onclick="calculateInitialCleaning()">计算初始清洗用量</button>
+        <div id="initialCleaningResult" class="result"></div>
+    </div>
+
+    <div class="calculator">
+        <h2>二、维持运行用量计算</h2>
+        <div class="input-group">
+            <label for="maintenanceVolume">系统保有水量 (吨)：</label>
+            <input type="number" id="maintenanceVolume" step="1" min="100" placeholder="请输入不小于100吨的水量">
+        </div>
+        <div class="input-group">
+            <label for="maintenanceDays">运行天数：</label>
+            <input type="number" id="maintenanceDays" step="1" min="1" value="365" placeholder="输入计划运行天数（默认一年）">
+        </div>
+        <button onclick="calculateMaintenance()">计算维护用量</button>
+        <div id="maintenanceResult" class="result"></div>
+    </div>
+
+    <div class="calculator">
+        <h2>使用说明</h2>
+        <div style="line-height: 1.6;">
+            <p><strong>注意：</strong>清洗前15天要求关闭全部排污阀！</p>
+            
+            <h3>一、初始清洗说明（第一个月）</h3>
+            <ul>
+                <li>第1天：每吨保有水量投加800g（对应浓度800PPm）</li>
+                <li>第2-30天：每吨保有水量投加60g（对应浓度60PPm）</li>
+                <li>清洗过程前15天不排水，后续根据情况进行适当排污或过滤</li>
+            </ul>
+
+            <h3>二、维持运行说明</h3>
+            <ul>
+                <li>每天添加一次，每吨系统保有水量投加30-40g</li>
+                <li>根据系统污垢情况，约60-90天完成清洗</li>
+                <li>清洗完成后长期使用可防止系统再结垢</li>
+                <li>按此方法，仅清洗这一次，可确保终身不再清洗</li>
+            </ul>
+
+            <h3>工程师建议</h3>
+            <ol>
+                <li>严格按说明书进行操作，避免产生质量问题，达到任务预期</li>
+                <li>系统清洗过程中，水逐渐变浑浊，属正常现象，无需处理和换水</li>
+                <li>本产品可替代全部阻垢、缓蚀、杀菌等水处理剂进行日常使用</li>
+                <li>达到技术改造升级的效果，淘汰传统水处理及化学酸洗工艺</li>
+            </ol>
+
+            <p><strong>包装、储存、有效期：</strong>25kg/塑桶或1000Kg/塑桶；密闭、避光存放。有效期三年。</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>技术支持：
+            <a href="tel:13903014097" style="color: #666; text-decoration: none;">庞森祥 13903014097</a>、
+            <a href="tel:13755818554" style="color: #666; text-decoration: none;">高嘉宾 13755818554</a>
+        </p>
+        <p>© 2024 广州佰宏新能源科技股份有限公司</p>
+    </div>
+
+    <script>
+        function calculateInitialCleaning() {
+            const waterVolume = parseFloat(document.getElementById('waterVolume').value);
+            
+            if (!waterVolume || waterVolume < 100) {
+                alert('请输入有效的系统保有水量（最小100吨）');
+                return;
+            }
+
+            // 第1天用量
+            const firstDayAmount = waterVolume * 800 / 1000; // 转换为kg
+            // 第2-30天用量
+            const remainingDaysAmount = waterVolume * 60 / 1000 * 29; // 转换为kg
+            // 总用量
+            const totalAmount = firstDayAmount + remainingDaysAmount;
+
+            const result = `
+                第1天用量：${firstDayAmount.toFixed(2)} kg（浓度800PPm）<br>
+                第2-30天每天用量：${(waterVolume * 60 / 1000).toFixed(2)} kg（浓度60PPm）<br>
+                首月总用量：${totalAmount.toFixed(2)} kg<br><br>
+                <em>注：清洗过程前15天不排水，后续根据情况进行适当排污或过滤</em>
+            `;
+
+            document.getElementById('initialCleaningResult').innerHTML = result;
+        }
+
+        function calculateMaintenance() {
+            const waterVolume = parseFloat(document.getElementById('maintenanceVolume').value);
+            const days = parseInt(document.getElementById('maintenanceDays').value);
+            
+            if (!waterVolume || waterVolume < 100) {
+                alert('请输入有效的系统保有水量（最小100吨）');
+                return;
+            }
+            if (!days || days < 1) {
+                alert('请输入有效的运行天数');
+                return;
+            }
+
+            // 计算每天用量范围
+            const dailyLow = waterVolume * 30 / 1000; // 转换为kg
+            const dailyHigh = waterVolume * 40 / 1000;
+            // 计算总用量范围
+            const totalLow = dailyLow * days;
+            const totalHigh = dailyHigh * days;
+
+            const result = `
+                每天用量：${dailyLow.toFixed(2)} - ${dailyHigh.toFixed(2)} kg<br>
+                总运行周期（${days}天）用量：${totalLow.toFixed(2)} - ${totalHigh.toFixed(2)} kg<br><br>
+                <em>注��维持运行期间每天添加一次，可确保终身不再清洗</em>
+            `;
+
+            document.getElementById('maintenanceResult').innerHTML = result;
+        }
+    </script>
+</body>
+</html> 

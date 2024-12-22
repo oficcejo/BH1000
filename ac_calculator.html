@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BH-1000WX（中央空调水）除垢灵用量计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .calculator {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 200px;
+            padding: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .notice {
+            color: red;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .helper {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>BH-1000WX（中央空调水）除垢灵用量计算器</h1>
+
+    <div class="calculator">
+        <h2>系统保有水量计算</h2>
+        <div class="input-group">
+            <label for="coolingCapacity">机组总制冷量 (kW)：</label>
+            <input type="number" id="coolingCapacity" step="0.1" min="0" onchange="calculateVolumes()">
+        </div>
+        <div id="volumeResult" class="result">
+            <em>输入总制冷量后自动计算保有水量</em>
+        </div>
+    </div>
+
+    <div class="calculator">
+        <h2>一、冷媒密闭循环水系统</h2>
+        <div class="input-group">
+            <label for="refrigerantVolume">冷媒水保有水量 (吨)：</label>
+            <input type="number" id="refrigerantVolume" step="0.1" min="0.1">
+        </div>
+        <div class="input-group">
+            <label for="refrigerantMonths">后续维护月数：</label>
+            <input type="number" id="refrigerantMonths" step="1" min="1" value="12" placeholder="输入计划维护月数">
+        </div>
+        <button onclick="calculateRefrigerant()">计算用量</button>
+        <div id="refrigerantResult" class="result"></div>
+    </div>
+
+    <div class="calculator">
+        <h2>二、冷却循环水系统</h2>
+        <div class="input-group">
+            <label for="coolingVolume">冷却水保有水量 (吨)：</label>
+            <input type="number" id="coolingVolume" step="0.1" min="0.1">
+        </div>
+        <div class="input-group">
+            <label for="cleaningDays">清洗天数：</label>
+            <input type="number" id="cleaningDays" step="1" min="30" max="45" value="30" placeholder="建议30-45天">
+        </div>
+        <div class="input-group">
+            <label for="maintenanceDays">后续维护天数：</label>
+            <input type="number" id="maintenanceDays" step="1" min="1" value="365" placeholder="输入计划维护天数">
+        </div>
+        <button onclick="calculateCooling()">计算用量</button>
+        <div id="coolingResult" class="result"></div>
+    </div>
+
+    <div class="calculator">
+        <h2>使用说明</h2>
+        <div style="line-height: 1.6;">
+            <h3>系统水量计算参考</h3>
+            <ul>
+                <li>冷媒水保有水量(吨) = 含备用机组在内的所有机组总制冷量 ÷ 116.3kw</li>
+                <li>冷却水保有水量(吨) = 含备用机组在内的所有机组总制冷量 ÷ 145kw</li>
+            </ul>
+            
+            <h3>一、无冷却塔的冷媒密闭循环水系统</h3>
+            <ul>
+                <li>按每吨保有水量加25kg（1桶）一次性加到膨胀水箱中</li>
+                <li>打开排污阀将药剂全部引入系统中运行即可</li>
+                <li>系统和平常一样正常运行，直到制冷季结束停机时</li>
+                <li>清洗不得低于60天以上，除垢率高达95%以上</li>
+                <li>清洗完成后，全部排掉所有脏水，用清水冲洗干净即可</li>
+                <li>今后每月按每吨保有水量0.15kg加药，长期进行防垢</li>
+            </ul>
+
+            <h3>二、有冷却塔的冷却循环水系统</h3>
+            <ul>
+                <li>由于冷却塔处风吹损失水量过大，会导致药剂流失，需要每天投药</li>
+                <li>清洗期间：每天按每吨保有水量投加1.25kg</li>
+                <li>清洗时间：根据系统污垢情况，约需30-45天</li>
+                <li>整个清洗过程无论水多脏，始终不排水</li>
+                <li>清洗完成后：改为每天每吨保有水量投药0.15kg长期使用</li>
+            </ul>
+
+            <h3>工程师建议</h3>
+            <ol>
+                <li>严格按说明书进行操作，避免产生质量问题，达到任务预期</li>
+                <li>系统清洗过程中，水逐渐变浑浊，属正常现象，无需处理和换水</li>
+                <li>本产品可替代全部阻垢、缓蚀、杀菌等水处理剂进行日常使用</li>
+                <li>达到技术改造升级的效果，淘汰传统水处理及化学酸洗工艺</li>
+            </ol>
+
+            <p><strong>包装、储存、有效期：</strong>25kg/塑桶；密闭、避光存放。有效期三年。</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateVolumes() {
+            const capacity = parseFloat(document.getElementById('coolingCapacity').value);
+            
+            if (!capacity || capacity <= 0) {
+                alert('请输入有效的制冷量');
+                return;
+            }
+
+            const refrigerantVolume = (capacity / 116.3).toFixed(2);
+            const coolingVolume = (capacity / 145).toFixed(2);
+
+            const result = `
+                冷媒水保有水量：${refrigerantVolume} 吨<br>
+                冷却水保有水量：${coolingVolume} 吨
+            `;
+
+            document.getElementById('volumeResult').innerHTML = result;
+            document.getElementById('refrigerantVolume').value = refrigerantVolume;
+            document.getElementById('coolingVolume').value = coolingVolume;
+        }
+
+        function calculateRefrigerant() {
+            const waterVolume = parseFloat(document.getElementById('refrigerantVolume').value);
+            const months = parseInt(document.getElementById('refrigerantMonths').value);
+            
+            if (!waterVolume || waterVolume <= 0) {
+                alert('请输入有效的系统保有水量');
+                return;
+            }
+            if (!months || months < 1) {
+                alert('请输入有效的维护月数');
+                return;
+            }
+
+            // 计算初次清洗用量
+            const cleaningAmount = waterVolume * 25;
+            // 计算维护用量
+            const monthlyMaintenanceAmount = waterVolume * 0.15;
+            const totalMaintenanceAmount = monthlyMaintenanceAmount * months;
+
+            const result = `
+                初次清洗用量：${cleaningAmount.toFixed(2)} kg（一次性加入）<br>
+                后续维护用量：${monthlyMaintenanceAmount.toFixed(2)} kg/月<br>
+                维护期（${months}个月）总用量：${totalMaintenanceAmount.toFixed(2)} kg<br><br>
+                <em>注：清洗时间不得低于60天，清洗完成后不需要再排水</em>
+            `;
+
+            document.getElementById('refrigerantResult').innerHTML = result;
+        }
+
+        function calculateCooling() {
+            const waterVolume = parseFloat(document.getElementById('coolingVolume').value);
+            const cleaningDays = parseInt(document.getElementById('cleaningDays').value);
+            const maintenanceDays = parseInt(document.getElementById('maintenanceDays').value);
+            
+            if (!waterVolume || waterVolume <= 0) {
+                alert('请输入有效的系统保有水量');
+                return;
+            }
+            if (!cleaningDays || cleaningDays < 30 || cleaningDays > 45) {
+                alert('请输入有效的清洗天数（30-45天）');
+                return;
+            }
+            if (!maintenanceDays || maintenanceDays < 1) {
+                alert('请输入有效的维护天数');
+                return;
+            }
+
+            // 计算清洗期间每天用量
+            const dailyCleaningAmount = waterVolume * 1.25;
+            // 计算清洗期间总用量
+            const totalCleaningAmount = dailyCleaningAmount * cleaningDays;
+            // 计算维护期间每天用量
+            const dailyMaintenanceAmount = waterVolume * 0.15;
+            // 计算维护期间总用量
+            const totalMaintenanceAmount = dailyMaintenanceAmount * maintenanceDays;
+
+            const result = `
+                清洗期间：<br>
+                每天冲击投药量：${dailyCleaningAmount.toFixed(2)} kg<br>
+                清洗期（${cleaningDays}天）总用量：${totalCleaningAmount.toFixed(2)} kg<br><br>
+                后续维护：<br>
+                每天维护用量：${dailyMaintenanceAmount.toFixed(2)} kg<br>
+                维护期（${maintenanceDays}天）总用量：${totalMaintenanceAmount.toFixed(2)} kg<br><br>
+                <em>注：清洗过程始终不排水，清洗完成后改为维护剂量</em>
+            `;
+
+            document.getElementById('coolingResult').innerHTML = result;
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佰宏®BH-1000WX（工业冷却水＜100吨）除垢灵用量计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .calculator {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 200px;
+            padding: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .notice {
+            color: red;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+            margin-top: 30px;
+            padding-top: 20px;
+        }
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>佰宏<sup>®</sup>BH-1000WX（工业冷却水＜100吨）除垢灵用量计算器</h1>
+    
+    <div class="calculator">
+        <h2>一、有冷却塔的循环水系统（<100吨）</h2>
+        <div class="input-group">
+            <label for="openVolume">系统保有水量 (吨)：</label>
+            <input type="number" id="openVolume" step="0.1" min="0.1" max="100" placeholder="请输入小于100吨的水量">
+        </div>
+        <div class="input-group">
+            <label for="cleaningDays">清洗天数：</label>
+            <input type="number" id="cleaningDays" step="1" min="30" max="45" value="30" placeholder="建议30-45天">
+        </div>
+        <div class="input-group">
+            <label for="maintenanceDays">后续维护天数：</label>
+            <input type="number" id="maintenanceDays" step="1" min="1" value="365" placeholder="输入计划维护天数">
+        </div>
+        <button onclick="calculateOpen()">计算用量</button>
+        <div id="openResult" class="result"></div>
+    </div>
+
+    <div class="calculator">
+        <h2>使用说明</h2>
+        <div style="line-height: 1.6;">
+            <p><strong>注意：</strong>本产品仅用于小型工业冷却水系统！清洗期间要求关闭全部排污阀！</p>
+            
+            <h3>一、蒸汽锅炉运行期间的清洗除垢</h3>
+            <ul>
+                <li>无论蒸汽锅炉每天运行多长时间，每天加药量固定不变</li>
+                <li>每天加药量（锅炉额定蒸发量2-35t/h）：每天加药量(kg) = 锅炉的实际蒸发量(t/h) × 5kg</li>
+                <li>每天一次或间断将所需药量加入</li>
+                <li>将每天加药量投入锅炉软水箱，连续投加30-45天</li>
+                <li>当锅炉出力连续三天不再变化时，说明清洗已经完成</li>
+                <li><span style="color: red;">重要：清洗完成后务必再正常运行15-30天后方可停炉查验</span></li>
+            </ul>
+
+            <h3>二、蒸汽锅炉维持运行期间终止再结垢</h3>
+            <ul>
+                <li>完成清洗后的蒸汽锅炉，为防止今后再结垢，按如下方法投药</li>
+                <li>每天加药量（锅炉额定蒸发量2-35t/h）：</li>
+                <li>按锅炉每天运行总补水量(t/h) × 50-75g</li>
+                <li>每天间断或连续将选定的加药量投入锅炉软水箱中或汽包内</li>
+                <li>长年使用，锅炉炉内始终洁净无垢，保持最大出力，最佳运行成本</li>
+            </ul>
+
+            <h3>工程师建议</h3>
+            <ol>
+                <li>严格按说明书进行操作，否则会产生质量问题</li>
+                <li>系统清洗过程中，炉水逐渐变浑浊，属正常现象，无需理会</li>
+                <li>BH-1000WG除垢灵可替代现有全部的阻垢、缓蚀</li>
+            </ol>
+
+            <p><strong>包装、储存、有效期：</strong>25kg/塑桶；密闭、避光、阴凉处存放。有效期二年。</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>技术支持：
+            <a href="tel:13903014097" style="color: #666; text-decoration: none;">庞森祥 13903014097</a>、
+            <a href="tel:13755818554" style="color: #666; text-decoration: none;">高嘉宾 13755818554</a>
+        </p>
+        <p>© 2024 广州佰宏新能源科技股份有限公司</p>
+    </div>
+
+    <script>
+        function calculateOpen() {
+            const waterVolume = parseFloat(document.getElementById('openVolume').value);
+            const cleaningDays = parseInt(document.getElementById('cleaningDays').value);
+            const maintenanceDays = parseInt(document.getElementById('maintenanceDays').value);
+            
+            if (!waterVolume || waterVolume >= 100 || waterVolume <= 0) {
+                alert('请输入有效的系统保有水量（0-100吨）');
+                return;
+            }
+            if (!cleaningDays || cleaningDays < 30 || cleaningDays > 45) {
+                alert('请输入有效的清洗天数（30-45天）');
+                return;
+            }
+            if (!maintenanceDays || maintenanceDays < 1) {
+                alert('请输入有效的维护天数');
+                return;
+            }
+
+            // 计算清洗期间每天用���
+            const dailyCleaningAmount = waterVolume * 1.25;
+            // 计算清洗期间总用量
+            const totalCleaningAmount = dailyCleaningAmount * cleaningDays;
+            // 计算维护期间每天用量
+            const dailyMaintenanceAmount = waterVolume * 0.15;
+            // 计算维护期间总用量
+            const totalMaintenanceAmount = dailyMaintenanceAmount * maintenanceDays;
+
+            const result = `
+                清洗期间：<br>
+                每天冲击投药量：${dailyCleaningAmount.toFixed(2)} kg<br>
+                清洗期（${cleaningDays}天）总用量：${totalCleaningAmount.toFixed(2)} kg<br><br>
+                后续维护：<br>
+                每天维护用量：${dailyMaintenanceAmount.toFixed(2)} kg<br>
+                维护期（${maintenanceDays}天）总用量：${totalMaintenanceAmount.toFixed(2)} kg<br><br>
+                <em>注：清洗过程始终不排水，清洗完成后改为维护剂量</em>
+            `;
+
+            document.getElementById('openResult').innerHTML = result;
+        }
+
+        function calculateClosed() {
+            const waterVolume = parseFloat(document.getElementById('closedVolume').value);
+            const months = parseInt(document.getElementById('maintenanceMonths').value);
+            
+            if (!waterVolume || waterVolume <= 0) {
+                alert('请输入有效的系统保有水量');
+                return;
+            }
+            if (!months || months < 1) {
+                alert('请输入有效的维护月数');
+                return;
+            }
+
+            // 计算初次清洗用量
+            const cleaningAmount = waterVolume * 25;
+            // 计算维护用量
+            const monthlyMaintenanceAmount = waterVolume * 0.15;
+            const totalMaintenanceAmount = monthlyMaintenanceAmount * months;
+
+            const result = `
+                初次清洗用量：${cleaningAmount.toFixed(2)} kg（一次性加入）<br>
+                后续维护用量：${monthlyMaintenanceAmount.toFixed(2)} kg/月<br>
+                维护期（${months}个月）总用量：${totalMaintenanceAmount.toFixed(2)} kg<br><br>
+                <em>注：清洗过程要求失水补药，清洗时间不低于60天，清洗过程始终不排水</em>
+            `;
+
+            document.getElementById('closedResult').innerHTML = result;
+        }
+    </script>
+</body>
+</html> 

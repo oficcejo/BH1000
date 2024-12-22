@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佰宏®BH-1000G（锅炉水）除垢灵用量计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .notice {
+            color: red;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .calculator {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 200px;
+            padding: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .footer {
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+            margin-top: 30px;
+            padding-top: 20px;
+        }
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>佰宏<sup>®</sup>BH-1000G（锅炉水）除垢灵用量计算器</h1>
+    
+    <div class="notice">
+        注意：本产品仅用于锅炉水系统！
+    </div>
+
+    <div class="calculator">
+        <h2>一、清洗除垢加药量计算</h2>
+        <div class="input-group">
+            <label for="evaporation">锅炉实际蒸发量 (t/h)：</label>
+            <input type="number" id="evaporation" step="0.1" min="2">
+        </div>
+        <div class="input-group">
+            <label for="days">清洗天数：</label>
+            <input type="number" id="days" step="1" min="1" value="30" placeholder="建议30-45天">
+        </div>
+        <button onclick="calculateCleaning()">计算清洗用量</button>
+        <div id="cleaningResult" class="result"></div>
+    </div>
+
+    <div class="calculator">
+        <h2>二、维持运行防垢加药量计算</h2>
+        <div class="input-group">
+            <label for="waterSupply">锅炉运行补水量 (t/h)：</label>
+            <input type="number" id="waterSupply" step="0.1" min="0">
+        </div>
+        <div class="input-group">
+            <label for="maintenanceDays">运行天数：</label>
+            <input type="number" id="maintenanceDays" step="1" min="1" value="365" placeholder="输入计划运行天数（默认一年）">
+        </div>
+        <div class="input-group">
+            <label for="pressure">锅炉压力：</label>
+            <select id="pressure">
+                <option value="low">小于9.8Mpa</option>
+                <option value="high">大于9.8Mpa</option>
+            </select>
+        </div>
+        <button onclick="calculateMaintenance()">计算维护用量</button>
+        <div id="maintenanceResult" class="result"></div>
+    </div>
+
+    <div class="calculator">
+        <h2>使用说明</h2>
+        <div style="line-height: 1.6;">
+            <p><strong>注意：</strong>锅炉运行期间的连排与定排的排污水量均可按日常量的85%减排进行。</p>
+            
+            <h3>一、清洗除垢说明</h3>
+            <ul>
+                <li>无论蒸汽锅炉每天运行多长时间，每天加药量固定不变</li>
+                <li>将每天加药量投入锅炉软水箱，连续投加30-45天</li>
+                <li>当锅炉出力连续三天不再变化时，说明清洗已经完成</li>
+                <li><span style="color: red;">重要：清洗完成后务必再正常运行15-30天后方可停炉查验</span></li>
+            </ul>
+
+            <h3>二、维持运行说明</h3>
+            <ul>
+                <li>完成清洗后的蒸汽锅炉，按说明投药可确保终身不再清洗</li>
+                <li>每小时一次或连续将选定的加药量投入锅炉软水箱中</li>
+                <li>长年使用，锅炉炉内始终洁净无垢，保持最大出力，最佳运行成本</li>
+            </ul>
+
+            <h3>工程师建议</h3>
+            <ol>
+                <li>严格按说明书进行操作，否则会产生质量问题</li>
+                <li>系统清洗过程中，炉水逐渐变浑浊，属正常现象，无需理会</li>
+                <li>BH-1000G除垢灵可替代现有全部的阻垢、缓蚀、预膜及化学清洗等产品</li>
+                <li>使用本品后，不再需要使用其它任何水处理药剂</li>
+            </ol>
+
+            <p><strong>包装、储存、有效期：</strong>25kg/塑桶；密闭、避光、阴凉处存放。有效期二年。</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>技术支持：
+            <a href="tel:13903014097" style="color: #666; text-decoration: none;">庞森祥 13903014097</a>、
+            <a href="tel:13755818554" style="color: #666; text-decoration: none;">高嘉宾 13755818554</a>
+        </p>
+        <p>© 2024 广州佰宏新能源科技股份有限公司</p>
+    </div>
+
+    <script>
+        function calculateCleaning() {
+            const evaporation = parseFloat(document.getElementById('evaporation').value);
+            const days = parseInt(document.getElementById('days').value);
+            if (!evaporation || evaporation < 2) {
+                alert('请输入有效的蒸发量（最小2t/h）');
+                return;
+            }
+            if (!days || days < 1) {
+                alert('请输入有效的清洗天数');
+                return;
+            }
+
+            let result = '';
+            if (evaporation <= 35) {
+                const dailyAmount = evaporation * 2;
+                const totalAmount = dailyAmount * days;
+                result = `每天加药量：${dailyAmount.toFixed(2)} kg（一次性或间断加入）<br>` +
+                        `总清洗周期（${days}天）用：${totalAmount.toFixed(2)} kg`;
+            } else {
+                const hourlyAmount = evaporation * 50;
+                const dailyAmount = hourlyAmount * 24 / 1000; // 转换为kg
+                const totalAmount = dailyAmount * days;
+                result = `每小时加药量：${hourlyAmount.toFixed(2)} g（每小时或连续加入）<br>` +
+                        `每天用量：${dailyAmount.toFixed(2)} kg<br>` +
+                        `总清洗周期（${days}天）用量：${totalAmount.toFixed(2)} kg`;
+            }
+
+            document.getElementById('cleaningResult').innerHTML = result;
+        }
+
+        function calculateMaintenance() {
+            const waterSupply = parseFloat(document.getElementById('waterSupply').value);
+            const pressure = document.getElementById('pressure').value;
+            const days = parseInt(document.getElementById('maintenanceDays').value);
+            
+            if (!waterSupply || waterSupply < 0) {
+                alert('请输入有效的补水量');
+                return;
+            }
+            if (!days || days < 1) {
+                alert('请输入有效的运行天数');
+                return;
+            }
+
+            let result = '';
+            if (pressure === 'low') {
+                const lowRange = waterSupply * 20;
+                const highRange = waterSupply * 30;
+                const dailyLow = lowRange * 24 / 1000;  // 转换为kg
+                const dailyHigh = highRange * 24 / 1000;
+                const totalLow = dailyLow * days;
+                const totalHigh = dailyHigh * days;
+                result = `每小时加药量：${lowRange.toFixed(2)}g - ${highRange.toFixed(2)}g<br>` +
+                        `每天用量：${dailyLow.toFixed(2)}kg - ${dailyHigh.toFixed(2)}kg<br>` +
+                        `总运行周期（${days}天）用量：${totalLow.toFixed(2)}kg - ${totalHigh.toFixed(2)}kg`;
+            } else {
+                const lowRange = waterSupply * 10;
+                const highRange = waterSupply * 15;
+                const dailyLow = lowRange * 24 / 1000;  // 转换为kg
+                const dailyHigh = highRange * 24 / 1000;
+                const totalLow = dailyLow * days;
+                const totalHigh = dailyHigh * days;
+                result = `每小时加药量：${lowRange.toFixed(2)}g - ${highRange.toFixed(2)}g<br>` +
+                        `每天用量：${dailyLow.toFixed(2)}kg - ${dailyHigh.toFixed(2)}kg<br>` +
+                        `总运行周期（${days}天）用量：${totalLow.toFixed(2)}kg - ${totalHigh.toFixed(2)}kg`;
+            }
+
+            document.getElementById('maintenanceResult').innerHTML = result;
+        }
+    </script>
+</body>
+</html> 

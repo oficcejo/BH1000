@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佰宏®BH-1000NX（供暖）除垢灵用量计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .calculator {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"], select {
+            width: 200px;
+            padding: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .notice {
+            color: red;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .helper {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .footer {
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+            margin-top: 30px;
+            padding-top: 20px;
+        }
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>佰宏<sup>®</sup>BH-1000NX（供暖）除垢灵用量计算器</h1>
+    
+    <div class="notice">
+        注意：本产品仅用于供暖系统！仅限供暖季运行期间使用！
+    </div>
+
+    <div class="calculator">
+        <h2>一、热源一次网循环水系统</h2>
+        <div class="input-group">
+            <label for="primaryVolume">系统保有水量 (吨)：</label>
+            <input type="number" id="primaryVolume" step="1" min="1" placeholder="请输入系统保有水量">
+        </div>
+        <div class="input-group">
+            <label for="primaryMonths">维护月数：</label>
+            <input type="number" id="primaryMonths" step="1" min="1" value="4" placeholder="输入供暖季月数">
+        </div>
+        <button onclick="calculatePrimary()">计算用量</button>
+        <div id="primaryResult" class="result"></div>
+    </div>
+
+    <div class="calculator">
+        <h2>二、用户侧二网循环水系统</h2>
+        <div class="input-group">
+            <label for="systemType">系统类型：</label>
+            <select id="systemType" onchange="updateVolumeHelper()">
+                <option value="radiator">换热片式</option>
+                <option value="floor">地暖式</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="heatingArea">供暖面积（万平方米）：</label>
+            <input type="number" id="heatingArea" step="0.1" min="0.1" onchange="updateVolumeHelper()">
+            <div id="volumeHelper" class="helper"></div>
+        </div>
+        <div class="input-group">
+            <label for="secondaryVolume">系统保有水量 (吨)：</label>
+            <input type="number" id="secondaryVolume" step="1" min="1">
+        </div>
+        <div class="input-group">
+            <label for="secondaryMonths">维护月数：</label>
+            <input type="number" id="secondaryMonths" step="1" min="1" value="4" placeholder="输入供暖季月数">
+        </div>
+        <button onclick="calculateSecondary()">计算用量</button>
+        <div id="secondaryResult" class="result"></div>
+    </div>
+
+    <div class="calculator">
+        <h2>使用说明</h2>
+        <div style="line-height: 1.6;">
+            <p><strong>注意：</strong>本产品仅限供暖季运行期间使用！清洗时间不得低于60天！</p>
+            
+            <h3>一、热源一次网循环水系统</h3>
+            <ul>
+                <li>按每吨系统保有水量25kg一次性加入系统内（通过膨胀补水箱）</li>
+                <li>清洗过程要求失水必须按量补药</li>
+                <li>随系统带药运行至供暖期结束，放出全部脏水</li>
+                <li>用清水冲洗至排出水完全澄清为止，清洗完成</li>
+            </ul>
+
+            <h3>二、用户侧二次网循环水系统（重点）</h3>
+            <ul>
+                <li>按每吨保有水量25kg分2-3次加入系统内（通过换热站补水箱）</li>
+                <li>清洗过程中系统补水必须按量同时补药（否则会严重影响清洗质量）</li>
+                <li>随系统带药运行不低于60天至供暖期结束</li>
+                <li>放出全部脏水，用清水冲洗至排出水完全澄清为止</li>
+            </ul>
+
+            <h3>后续维护说明</h3>
+            <ul>
+                <li>供暖季期间，每月每吨保有水量投加0.15kg</li>
+                <li>长期进行，防止系统再结垢</li>
+                <li>按此方法，仅清洗这一次，可确保终身不再清洗</li>
+            </ul>
+
+            <h3>系统水量参考</h3>
+            <p>供暖二网保有水量按每万平方米供暖面积：</p>
+            <ul>
+                <li>换热片式：30m³</li>
+                <li>地暖式：10m³</li>
+            </ul>
+
+            <h3>工程师建议</h3>
+            <ol>
+                <li>严格按说明书进行操作，避免产生质量问题，达到任务预期</li>
+                <li>系统清洗过程中，水逐渐变浑浊，属正常现象，无需处理和换水</li>
+                <li>本产品可替代全部阻垢、缓蚀、杀菌等水处理剂进行日常使用</li>
+                <li>达到技术改造升级的效果，淘汰传统水处理及化学酸洗工艺</li>
+            </ol>
+
+            <p><strong>包装、储存、有效期：</strong>25kg/塑桶；密闭、避光存放。有效期三年。</p>
+        </div>
+    </div>
+
+    <script>
+        function updateVolumeHelper() {
+            const area = parseFloat(document.getElementById('heatingArea').value) || 0;
+            const type = document.getElementById('systemType').value;
+            const volume = type === 'radiator' ? area * 30 : area * 10;
+            document.getElementById('volumeHelper').innerHTML = 
+                `预估系统保有水量：${volume.toFixed(1)}吨`;
+            document.getElementById('secondaryVolume').value = volume;
+        }
+
+        function calculatePrimary() {
+            const waterVolume = parseFloat(document.getElementById('primaryVolume').value);
+            const months = parseInt(document.getElementById('primaryMonths').value);
+            
+            if (!waterVolume || waterVolume < 1) {
+                alert('请输入有效的系统保有水量');
+                return;
+            }
+            if (!months || months < 1) {
+                alert('请输入有效的维护月数');
+                return;
+            }
+
+            // 计算清洗用量
+            const cleaningAmount = waterVolume * 25;
+            // 计算维护用量
+            const maintenanceAmount = waterVolume * 0.15 * months;
+
+            const result = `
+                初次清洗用量：${cleaningAmount.toFixed(2)} kg（一次性加入）<br>
+                后续维护用量：${(waterVolume * 0.15).toFixed(2)} kg/月<br>
+                供暖季维护总用量：${maintenanceAmount.toFixed(2)} kg<br><br>
+                <em>注：清洗过程中系统失水必须按量补药，清洗时间不低于60天</em>
+            `;
+
+            document.getElementById('primaryResult').innerHTML = result;
+        }
+
+        function calculateSecondary() {
+            const waterVolume = parseFloat(document.getElementById('secondaryVolume').value);
+            const months = parseInt(document.getElementById('secondaryMonths').value);
+            
+            if (!waterVolume || waterVolume < 1) {
+                alert('请输入有效的系统保有水量');
+                return;
+            }
+            if (!months || months < 1) {
+                alert('请输入有效的维护月数');
+                return;
+            }
+
+            // 计算清洗用量
+            const cleaningAmount = waterVolume * 25;
+            // 计算维护用量
+            const maintenanceAmount = waterVolume * 0.15 * months;
+            // 计算每次投加量（分2-3次加入）
+            const perAddition = cleaningAmount / 2;
+
+            const result = `
+                初次清洗总用量：${cleaningAmount.toFixed(2)} kg（分2-3次加入，每次约${perAddition.toFixed(2)}kg）<br>
+                后续维护用量：${(waterVolume * 0.15).toFixed(2)} kg/月<br>
+                供暖季维护总用量：${maintenanceAmount.toFixed(2)} kg<br><br>
+                <em>注：清洗过程中系统补水必须按量补药，清洗时间不低于60天</em>
+            `;
+
+            document.getElementById('secondaryResult').innerHTML = result;
+        }
+    </script>
+
+    <div class="footer">
+        <p>技术支持：
+            <a href="tel:13903014097" style="color: #666; text-decoration: none;">庞森祥 13903014097</a>、
+            <a href="tel:13755818554" style="color: #666; text-decoration: none;">高嘉宾 13755818554</a>
+        </p>
+        <p>© 2024 广州佰宏新能源科技股份有限公司</p>
+    </div>
+</body>
+</html> 

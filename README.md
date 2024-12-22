@@ -38,3 +38,28 @@ MIT License
 ## 问题反馈
 
 如有问题或建议，请提交 Issue 或发送邮件至 [您的邮箱]
+
+
+Github 提交方法
+# 1. 确保已初始化
+git init
+
+# 2. 添加所有文件
+git add .
+
+# 3. 创建初始提交
+git commit -m "初始化提交：BH1000系列除垢灵计算器"
+
+# 4. 创建并切换到 main 分支
+git branch -M main
+
+# 5. 添加远程仓库
+git remote add origin https://github.com/oficcejo/BH1000.git
+
+# 6. 推送到远程仓库
+git push -u origin main
+
+# 有新的更改时
+git add .
+git commit -m "更新说明"
+git push
